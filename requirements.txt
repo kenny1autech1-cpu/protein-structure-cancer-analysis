@@ -1,0 +1,7 @@
+biopython
+numpy
+pandas
+matplotlib
+requests
+py3Dmol
+jupyter

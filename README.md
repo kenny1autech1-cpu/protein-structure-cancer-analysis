@@ -37,6 +37,10 @@ My previous project identified four genes consistently downregulated in breast c
 
 FHL1 had a cliff edge at residue 230. Everything before it — the LIM domains — is well structured. Everything after it is a floppy, unstructured tail with no fixed shape. FHL2, FHL3, and FHL4 don't have this tail at all.
 
+![FHL1 pLDDT along sequence](figures/FHL1_plddt_plot.png)
+
+![FHL family comparison](figures/FHL_comparison_plddt.png)
+
 | Gene | Avg pLDDT | Structured (>90%) | Disordered (<50%) |
 |------|-----------|-------------------|-------------------|
 | FHL1 | 73.1 | 40.4% | 26.4% |
@@ -56,7 +60,13 @@ So the hypothesis: **mutations in the structured LIM domains should be damaging.
 
 **AlphaMissense** — DeepMind's model scored all 6,137 possible FHL1 missense mutations. LIM domains are almost entirely red (damaging). The disordered tail is almost entirely blue (tolerated). Same boundary, completely independent method.
 
+![AlphaMissense saturation mutagenesis heatmap](figures/FHL1_alphamissense_heatmap.png)
+
 **ClinVar** — real patient variants fetched via NCBI Entrez API, remapped to the canonical isoform. Four confirmed pathogenic variants recovered at positions 94, 216, 268, and 310.
+
+The integration figure below stacks all three evidence layers on one shared x-axis:
+
+![Integration figure — pLDDT + AlphaMissense + ClinVar](figures/FHL1_integration_figure.png)
 
 ---
 

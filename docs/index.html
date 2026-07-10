@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FHL Protein Family — Interactive 3D Viewer</title>
+    <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #0d1117;
+            color: #e6edf3;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        header {
+            padding: 48px 40px 32px;
+            text-align: center;
+            border-bottom: 1px solid #21262d;
+        }
+
+        header h1 {
+            font-size: 1.75em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+        }
+
+        header p {
+            color: #8b949e;
+            font-size: 0.95em;
+            max-width: 600px;
+            margin: 0 auto 6px;
+            line-height: 1.6;
+        }
+
+        header a {
+            color: #58a6ff;
+            text-decoration: none;
+            font-size: 0.85em;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: #21262d;
+        }
+
+        .protein-card {
+            background: #0d1117;
+        }
+
+        .viewer-container {
+            width: 100%;
+            height: 400px;
+            position: relative;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #8b949e;
+            font-size: 0.85em;
+        }
+
+        .card-info {
+            padding: 16px 24px 20px;
+            border-top: 1px solid #21262d;
+        }
+
+        .card-info h2 {
+            font-size: 1.05em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .card-info p {
+            color: #8b949e;
+            font-size: 0.83em;
+            line-height: 1.5;
+        }
+
+        .badge-disordered { color: #f97316; }
+        .badge-structured  { color: #58a6ff; }
+
+        .legend {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 18px 28px;
+            border-top: 1px solid #21262d;
+            flex-wrap: wrap;
+        }
+
+        .legend-label {
+            color: #8b949e;
+            font-size: 0.82em;
+            margin-right: 4px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.82em;
+            color: #c9d1d9;
+        }
+
+        .swatch {
+            width: 13px;
+            height: 13px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .findings {
+            padding: 32px 40px;
+            border-top: 1px solid #21262d;
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .findings h2 {
+            font-size: 1.05em;
+            font-weight: 600;
+            margin-bottom: 14px;
+            color: #e6edf3;
+        }
+
+        .findings p {
+            color: #8b949e;
+            font-size: 0.88em;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+            margin-top: 16px;
+        }
+
+        th {
+            text-align: left;
+            padding: 8px 12px;
+            background: #161b22;
+            color: #8b949e;
+            font-weight: 500;
+            border-bottom: 1px solid #21262d;
+        }
+
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #21262d;
+            color: #c9d1d9;
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        footer {
+            text-align: center;
+            padding: 24px;
+            color: #8b949e;
+            font-size: 0.8em;
+            border-top: 1px solid #21262d;
+        }
+
+        footer a { color: #58a6ff; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        .tip {
+            text-align: center;
+            padding: 10px;
+            color: #8b949e;
+            font-size: 0.78em;
+            background: #161b22;
+            border-top: 1px solid #21262d;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>FHL Protein Family — Interactive 3D Structures</h1>
+    <p>Rotate · zoom · click any structure below. Coloured by AlphaFold pLDDT confidence score.</p>
+    <p>Part of a study asking: <em>does structural confidence predict where mutations cause disease?</em></p>
+    <a href="https://github.com/kenny1autech1-cpu/protein-structure-cancer-analysis">← View full analysis on GitHub</a>
+</header>
+
+<div class="grid">
+
+    <div class="protein-card">
+        <div class="viewer-container" id="viewer-fhl1">
+            <div class="loading" id="load-fhl1">Loading FHL1…</div>
+        </div>
+        <div class="card-info">
+            <h2>FHL1 — Q13642 &nbsp;<span class="badge-disordered">avg pLDDT 73.1</span></h2>
+            <p>Tumour suppressor downregulated in breast cancer. Notice the disordered orange/yellow tail at the C-terminus (residues 230–325) — absent in all other family members. 323 amino acids.</p>
+        </div>
+    </div>
+
+    <div class="protein-card">
+        <div class="viewer-container" id="viewer-fhl2">
+            <div class="loading" id="load-fhl2">Loading FHL2…</div>
+        </div>
+        <div class="card-info">
+            <h2>FHL2 — Q14192 &nbsp;<span class="badge-structured">avg pLDDT 92.3</span></h2>
+            <p>Fully structured throughout. All four LIM domains are well-defined. No disordered regions. This is what FHL1 would look like without its unique C-terminal tail. 279 amino acids.</p>
+        </div>
+    </div>
+
+    <div class="protein-card">
+        <div class="viewer-container" id="viewer-fhl3">
+            <div class="loading" id="load-fhl3">Loading FHL3…</div>
+        </div>
+        <div class="card-info">
+            <h2>FHL3 — Q13643 &nbsp;<span class="badge-structured">avg pLDDT 91.8</span></h2>
+            <p>Fully structured. Same LIM domain architecture as FHL2. Confirms that disorder is not a family-wide trait — it is specific to FHL1. 280 amino acids.</p>
+        </div>
+    </div>
+
+    <div class="protein-card">
+        <div class="viewer-container" id="viewer-fhl4">
+            <div class="loading" id="load-fhl4">Loading FHL4…</div>
+        </div>
+        <div class="card-info">
+            <h2>FHL4 — Q8CDC8 &nbsp;<span class="badge-structured">avg pLDDT 92.2</span></h2>
+            <p>Fully structured. Note: this is the <em>Mus musculus</em> (mouse) structure — human FHL4 is not in AlphaFold. ~85% sequence identity to the human protein. 279 amino acids.</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="tip">Click and drag to rotate &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Right-click to translate</div>
+
+<div class="legend">
+    <span class="legend-label">pLDDT colour scale:</span>
+    <div class="legend-item"><div class="swatch" style="background:#f97316"></div> &lt;50 — disordered</div>
+    <div class="legend-item"><div class="swatch" style="background:#eab308"></div> 50–70 — low confidence</div>
+    <div class="legend-item"><div class="swatch" style="background:#93c5fd"></div> 70–90 — confident</div>
+    <div class="legend-item"><div class="swatch" style="background:#3b82f6"></div> &gt;90 — highly confident</div>
+</div>
+
+<div class="findings">
+    <h2>What the structures show</h2>
+    <p>
+        FHL1 is the only family member with a disordered C-terminal tail — visible as the orange/yellow unstructured region at the end of the chain. This tail is created by alternative splicing unique to FHL1 and is absent in FHL2, FHL3, and FHL4, which are almost entirely blue (structured).
+    </p>
+    <p>
+        This structural difference turned out to be biologically meaningful. AlphaMissense pathogenicity scores for all 6,137 possible FHL1 missense mutations show the same boundary: mutations in the structured LIM domains (residues 1–230) are predicted damaging, while mutations in the disordered tail are tolerated. Real patient variants from ClinVar cluster in the structured core.
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Protein</th>
+                <th>Avg pLDDT</th>
+                <th>&gt;90% confident</th>
+                <th>&lt;50% disordered</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>FHL1</td><td style="color:#f97316">73.1</td><td>40.4%</td><td>26.4%</td></tr>
+            <tr><td>FHL2</td><td style="color:#58a6ff">92.3</td><td>81.5%</td><td>0.0%</td></tr>
+            <tr><td>FHL3</td><td style="color:#58a6ff">91.8</td><td>79.3%</td><td>0.4%</td></tr>
+            <tr><td>FHL4*</td><td style="color:#58a6ff">92.2</td><td>81.3%</td><td>0.0%</td></tr>
+        </tbody>
+    </table>
+    <p style="margin-top:10px; font-size:0.78em;">*FHL4 is Mus musculus</p>
+</div>
+
+<footer>
+    Structures from <a href="https://alphafold.ebi.ac.uk">AlphaFold EBI</a> &nbsp;·&nbsp;
+    Viewer powered by <a href="https://3dmol.org">3Dmol.js</a> &nbsp;·&nbsp;
+    <a href="https://github.com/kenny1autech1-cpu/protein-structure-cancer-analysis">Full analysis on GitHub</a> &nbsp;·&nbsp;
+    BSc Biochemistry &amp; Data Science · University of Sydney
+</footer>
+
+<script>
+const BASE = "https://raw.githubusercontent.com/kenny1autech1-cpu/protein-structure-cancer-analysis/main/data/raw/";
+
+const proteins = [
+    { id: "viewer-fhl1", loadId: "load-fhl1", file: "FHL1.pdb" },
+    { id: "viewer-fhl2", loadId: "load-fhl2", file: "Q14192.pdb" },
+    { id: "viewer-fhl3", loadId: "load-fhl3", file: "Q13643.pdb" },
+    { id: "viewer-fhl4", loadId: "load-fhl4", file: "Q8CDC8.pdb" },
+];
+
+proteins.forEach(({ id, loadId, file }) => {
+    const element = document.getElementById(id);
+    const viewer = $3Dmol.createViewer(element, {
+        backgroundColor: "#0d1117"
+    });
+
+    fetch(BASE + file)
+        .then(r => r.text())
+        .then(pdbData => {
+            document.getElementById(loadId).style.display = "none";
+            viewer.addModel(pdbData, "pdb");
+
+            // colour by B-factor (pLDDT) — AlphaFold standard colour scheme
+            viewer.setStyle({}, {
+                cartoon: {
+                    colorscheme: {
+                        prop: "b",
+                        gradient: "linear",
+                        colors: ["#f97316", "#eab308", "#93c5fd", "#3b82f6"],
+                        min: 0,
+                        max: 100
+                    }
+                }
+            });
+
+            viewer.zoomTo();
+            viewer.render();
+        })
+        .catch(() => {
+            document.getElementById(loadId).textContent = "Could not load structure.";
+        });
+});
+</script>
+
+</body>
+</html>

@@ -20,7 +20,7 @@ FHL1 is a tumour suppressor — a protein that normally keeps cell growth in che
 
 ## Where it started — 4 downregulated genes
 
-My previous project identified four genes consistently downregulated in breast cancer (GSE42568 dataset, Affymetrix microarray). I downloaded AlphaFold structures for all four, visualised them in 3D, and compared their structural confidence profiles. FHL1 stood out immediately.
+My [gene expression analysis](https://github.com/kenny1autech1-cpu/gene-expression-cancer-analysis) identified four genes consistently downregulated in breast cancer (GSE42568 dataset, Affymetrix microarray). I downloaded AlphaFold structures for all four, visualised them in 3D, and compared their structural confidence profiles. FHL1 stood out immediately.
 
 | Gene | What it does | Why it matters in cancer |
 |------|-------------|--------------------------|

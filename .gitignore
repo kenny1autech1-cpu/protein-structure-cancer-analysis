@@ -217,3 +217,14 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 data/raw/alphamissense.tsv.gz
+
+# Large data files
+data/raw/*.soft.gz
+data/raw/*.gz
+
+# Gene expression outputs (live in gene-expression-cancer-analysis repo)
+figures/GSE42568_volcano.png
+notebooks/04_gene_expression.ipynb
+
+# Scratch notebooks
+Untitled.ipynb
